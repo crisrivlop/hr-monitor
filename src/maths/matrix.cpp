@@ -68,13 +68,18 @@ Matrix Matrix::add(const Matrix& b){
     Matrix m{this->_rows,this->_cols};
 #if defined(HAVE_NEON)
     unsigned int cols4 = (this->_cols<4)? 0 : this->_cols - this->_cols%4;
+    float32x4_t a_cell,b_cell;
+    float32_f * dest = 0;
     for (unsigned int i = 0; i < this->_rows; i++){
         int j = 0;
 #pragma omp parallel private(j) num_threads(4) 
         {
             #pragma omp for
             for (j = 0; j < cols4; j+=4){
-                vst1q_f32((float32_t *)(m._data[i] + j),  vaddq_f32( vld1q_f32((const float32_t *)(this->_data[i] + j)), vld1q_f32((const float32_t *)(b._data[i] + j))));
+                a_cell = vld1q_f32((const float32_t *)(this->_data[i] + j));
+                b_cell = vld1q_f32((const float32_t *)(b._data[i] + j));
+                dest = (float32_t *)(m._data[i] + j);
+                vst1q_f32(dest,  vaddq_f32( a_cell, b_cell));
             }
 
             for (j = cols4; j < this->_cols; j++){
