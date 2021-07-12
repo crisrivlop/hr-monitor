@@ -70,14 +70,16 @@ Matrix Matrix::add(const Matrix& b){
     unsigned int cols4 = (this->_cols<4)? 0 : this->_cols - this->_cols%4;
     float32x4_t a_cell,b_cell;
     float32_t * dest = 0;
+    float32_t ** inA = (float32_t **)(this->data);
+    float32_t ** inB = (float32_t **)(b._data);
     for (unsigned int i = 0; i < this->_rows; i++){ 
         int j = 0;
 #pragma omp parallel private(j) num_threads(4) 
         {
             #pragma omp for
             for (j = 0; j < cols4; j+=4){
-                a_cell = vld1q_f32((const float32_t *)(this->_data[i] + j));
-                b_cell = vld1q_f32((const float32_t *)(b._data[i] + j));
+                a_cell = vld1q_f32(this->_data[i] + j);
+                b_cell = vld1q_f32(b._data[i] + j);
                 dest = (float32_t *)(m._data[i] + j);
                 vst1q_f32(dest,  vaddq_f32( a_cell, b_cell));
             }
