@@ -70,7 +70,7 @@ Matrix Matrix::add(const Matrix& b){
     unsigned int cols4 = (this->_cols<4)? 0 : this->_cols - this->_cols%4;
     float32x4_t a_cell,b_cell;
     float32_f * dest = 0;
-    for (unsigned int i = 0; i < this->_rows; i++){
+    for (unsigned int i = 0; i < this->_rows; i++){ 
         int j = 0;
 #pragma omp parallel private(j) num_threads(4) 
         {
