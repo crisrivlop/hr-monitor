@@ -74,7 +74,7 @@ Matrix Matrix::add(const Matrix& b){
         {
             #pragma omp for
             for (j = 0; j < cols4; j+=4){
-                vst1q_f32((float32_t *)(m._data[i] + j),  vaddq_f32( vld1q_f32((float32_t *)(this->_data[i] + j)), vld1q_f32((float32_t *)(b._data[i] + j))));
+                vst1q_f32((float32_t *)(m._data[i] + j),  vaddq_f32( vld1q_f32((const float32_t *)(this->_data[i] + j)), vld1q_f32((const float32_t *)(b._data[i] + j))));
             }
 
             for (j = cols4; j < this->_cols; j++){
@@ -110,7 +110,7 @@ Matrix Matrix::sub(const Matrix& b){
         rowThis = this->_data[i];
         rowB =  b._data[i];
         for (j = 0; j < cols4; j+=4){
-            vst1q_f32((float32_t *)(m._data[i] + j),  vsubq_f32( vld1q_f32((float32_t *)(rowThis + j)), vld1q_f32((float32_t *)(rowB + j))));
+            vst1q_f32((float32_t *)(m._data[i] + j),  vsubq_f32( vld1q_f32((const float32_t *)(rowThis + j)), vld1q_f32((const float32_t *)(rowB + j))));
         }
         for (j = cols4; j < this->_cols; j++){
             m._data[i][j] = this->_data[i][j] - b._data[i][j];
@@ -144,7 +144,7 @@ Matrix Matrix::mul(const float b){
     for (i = 0; i < this->_rows; i++){
         int j = 0;
             for (j = 0; j < cols4; j+=4){
-                vst1q_f32((float32_t *)(m._data[i] + j),  vmulq_f32( vld1q_f32((float32_t *)(this->_data[i] + j)), constant ) );
+                vst1q_f32((float32_t *)(m._data[i] + j),  vmulq_f32( vld1q_f32((const float32_t *)(this->_data[i] + j)), constant ) );
             }
 
             for (j = cols4; j < this->_cols; j++){
@@ -223,7 +223,7 @@ Matrix Matrix::transpose(){
         {
             #pragma omp for
             for (j = 0; j < cols4; j+=4){
-                vst1q_f32((float32_t *)(m._data[j] + i),vld1q_f32((float32_t *)(this->_data[i] + j)));
+                vst1q_f32((float32_t *)(m._data[j] + i),vld1q_f32((const float32_t *)(this->_data[i] + j)));
             }
 
             for (j = cols4; j < this->_cols; j++){
