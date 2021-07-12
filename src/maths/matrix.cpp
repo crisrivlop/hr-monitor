@@ -78,8 +78,10 @@ Matrix Matrix::add(const Matrix& b){
         {
             #pragma omp for
             for (j = 0; j < cols4; j+=4){
-                a_cell = vld1q_f32(this->_data[i] + j);
-                b_cell = vld1q_f32(b._data[i] + j);
+                const float32_t a_const = (const float32_t *) (this->_data[i] + j);  
+                const float32_t b_const = (const float32_t *) (b._data[i] + j);  
+                a_cell = vld1q_f32(a_const);
+                b_cell = vld1q_f32(b_const);
                 dest = (float32_t *)(m._data[i] + j);
                 vst1q_f32(dest,  vaddq_f32( a_cell, b_cell));
             }
