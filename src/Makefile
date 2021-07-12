@@ -1,5 +1,5 @@
 compiler := g++
-neon := -DHAVE_NEON=1
+neon := -DHAVE_NEON=1 -march=native -mfpu=neon
 opencvlibs := `pkg-config --cflags --libs opencv`
 openmp := -fopenmp -lpthread -D WITH_OPENMP=ON
 
@@ -11,7 +11,7 @@ all: clean main.o
 
 
 maths.o:
-	$(compiler) -O3  -c maths/iavector.cpp ${neon}
+	$(compiler) -O3  -c maths/iavector.cpp
 	$(compiler) -O3  -c maths/matrix.cpp ${neon}
 
 utils.o: maths.o
