@@ -13,6 +13,7 @@ using namespace cv;
 
 
 int main(int args, char ** argv){
+	auto start = std::chrono::system_clock::now();
 
 
     VideoCapture cap(argv[1]); 
@@ -246,11 +247,12 @@ int main(int args, char ** argv){
         cv::merge(yiq_ret, ImgYIQ_32FC3_2);
         cv::transform(ImgYIQ_32FC3_2, ImgYIQ_32FC3_2, matRGB);
 
+/*
         Mat mask = ImgYIQ_32FC3_2 < 0;
         ImgYIQ_32FC3_2.setTo(0,mask);
         mask = ImgYIQ_32FC3_2 > 1;
         ImgYIQ_32FC3_2.setTo(1,mask);
-
+*/
         ImgYIQ_32FC3_2.convertTo(ImgYIQ_32FC3_2, CV_8UC3,255);
 
         outputVideo << ImgYIQ_32FC3_2;
@@ -258,6 +260,11 @@ int main(int args, char ** argv){
         
 
     }
+
+	auto end = std::chrono::system_clock::now();
+	std::chrono::duration<double> elapsed =end-start;
+	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+	cout << "finished at " << std::ctime(&end_time) << " elapsed " << elapsed.count() << " s\n";
 
     return 0;
 }
