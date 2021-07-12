@@ -70,7 +70,7 @@ Matrix Matrix::add(const Matrix& b){
     unsigned int cols4 = (this->_cols<4)? 0 : this->_cols - this->_cols%4;
     float32x4_t a_cell,b_cell;
     float32_t * dest = 0;
-    float32_t ** inA = (float32_t **)(this->data);
+    float32_t ** inA = (float32_t **)(this->_data);
     float32_t ** inB = (float32_t **)(b._data);
     for (unsigned int i = 0; i < this->_rows; i++){ 
         int j = 0;
